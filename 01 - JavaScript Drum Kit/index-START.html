@@ -9,56 +9,79 @@
 
 
   <div class="keys">
-    <div data-key="65" class="key">
+    <div data-key="65" class="key key-65">
       <kbd>A</kbd>
       <span class="sound">clap</span>
     </div>
-    <div data-key="83" class="key">
+    <div data-key="83" class="key key-83">
       <kbd>S</kbd>
       <span class="sound">hihat</span>
     </div>
-    <div data-key="68" class="key">
+    <div data-key="68" class="key key-68">
       <kbd>D</kbd>
       <span class="sound">kick</span>
     </div>
-    <div data-key="70" class="key">
+    <div data-key="70" class="key key-70">
       <kbd>F</kbd>
       <span class="sound">openhat</span>
     </div>
-    <div data-key="71" class="key">
+    <div data-key="71" class="key key-71">
       <kbd>G</kbd>
       <span class="sound">boom</span>
     </div>
-    <div data-key="72" class="key">
+    <div data-key="72" class="key key-72">
       <kbd>H</kbd>
       <span class="sound">ride</span>
     </div>
-    <div data-key="74" class="key">
+    <div data-key="74" class="key key-74">
       <kbd>J</kbd>
       <span class="sound">snare</span>
     </div>
-    <div data-key="75" class="key">
+    <div data-key="75" class="key key-75">
       <kbd>K</kbd>
       <span class="sound">tom</span>
     </div>
-    <div data-key="76" class="key">
+    <div data-key="76" class="key key-76">
       <kbd>L</kbd>
       <span class="sound">tink</span>
     </div>
   </div>
 
-  <audio data-key="65" src="sounds/clap.wav"></audio>
-  <audio data-key="83" src="sounds/hihat.wav"></audio>
-  <audio data-key="68" src="sounds/kick.wav"></audio>
-  <audio data-key="70" src="sounds/openhat.wav"></audio>
-  <audio data-key="71" src="sounds/boom.wav"></audio>
-  <audio data-key="72" src="sounds/ride.wav"></audio>
-  <audio data-key="74" src="sounds/snare.wav"></audio>
-  <audio data-key="75" src="sounds/tom.wav"></audio>
-  <audio data-key="76" src="sounds/tink.wav"></audio>
+  <audio data-key="65" class="js-audio-65" src="sounds/clap.wav"></audio>
+  <audio data-key="83" class="js-audio-83" src="sounds/hihat.wav"></audio>
+  <audio data-key="68" class="js-audio-68" src="sounds/kick.wav"></audio>
+  <audio data-key="70" class="js-audio-70" src="sounds/openhat.wav"></audio>
+  <audio data-key="71" class="js-audio-71" src="sounds/boom.wav"></audio>
+  <audio data-key="72" class="js-audio-72" src="sounds/ride.wav"></audio>
+  <audio data-key="74" class="js-audio-74" src="sounds/snare.wav"></audio>
+  <audio data-key="75" class="js-audio-75" src="sounds/tom.wav"></audio>
+  <audio data-key="76" class="js-audio-76" src="sounds/tink.wav"></audio>
 
 <script>
+  window.addEventListener('keydown', playSound);
 
+  function playSound(e) {
+    var keyCode = e.keyCode;
+    //add the 'playing' class to the div.key that has a data-key attribute that matches keyCode
+    var instrument = document.querySelector(`.key-${keyCode}`);
+    instrument.classList.add('playing');
+    
+    //play the corresponding audio
+    var audio = document.querySelector(`.js-audio-${keyCode}`)
+    if(!audio) {return;}
+    audio.currentTime = 0; //rewind to start
+    audio.play();
+
+    //set up the event listener for when the keyup happens on a key
+    function removeTransition(e) {
+      if(e.propertyName !== 'transform') return; //skip all but transform transitions
+      console.log(this);
+      this.classList.remove('playing');
+    }
+
+    var keys = document.querySelectorAll('.key');
+    keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+  }
 </script>
 
 
