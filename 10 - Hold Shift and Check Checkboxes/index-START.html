@@ -104,6 +104,34 @@
   </div>
 
 <script>
+  //get all the checkboxes
+  const checkboxes = document.querySelectorAll('[type=checkbox]');
+  let startIndex = 0;
+
+  checkboxes.forEach((checkbox, index, array) => {
+    checkbox.addEventListener('click', function makeSelections(e) {
+      //if checked without shift key, set startIndex
+      //if checked with shift key, set every element between startIndex and index to checked=true
+      if(e.shiftKey){
+        //check or uncheck each checkbox between startIndex and Index
+        if(index < startIndex) {
+          //we're going backwards, e.g. from index 4 to index 1, with index 1
+          //being the one that was clicked, so we don't want to change its checked value, and will start at the next item
+          for(let i = index + 1; i <= startIndex; i++) {
+            checkboxes[i].checked = e.target.checked;
+          }
+        } else {
+          //we're going forwards, but still don't want to change the checked status of index
+          for(let i = startIndex; i < index; i++) {
+            checkboxes[i].checked = e.target.checked;
+          }
+        }
+      } else {
+        //reset the startIndex to the index of whatever checkbox was just clicked
+        startIndex = index;
+      }
+    });
+  });
 </script>
 </body>
 </html>
